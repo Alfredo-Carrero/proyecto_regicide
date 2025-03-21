@@ -27,18 +27,23 @@ public class Carta {
             this.palo = palo;
     }
 
+    public int getVida() {
+        return vida;
+    }
+
     // Métodos
     private int asignarVida(int numero) {
         if (numero == 11) {
-            return 20; // J tiene 20 de vida
+            return 20;
         } else if (numero == 12) {
-            return 30; // Q tiene 30 de vida
+            return 30;
         } else if (numero == 13) {
-            return 40; // K tiene 40 de vida
+            return 40;
         }
-        return 0;
+        return numero;
     }
 
+    // toString
     @Override
     public String toString() {
         String nombreCarta;
@@ -54,6 +59,6 @@ public class Carta {
         }
 
 
-        return nombreCarta + " de " + palo + " (Vida: " + vida + ")";
+        return nombreCarta + " de " + palo;
     }
 }

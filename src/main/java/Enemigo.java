@@ -1,41 +1,56 @@
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
 
 public class Enemigo {
     private ArrayList<Carta> castillo = new ArrayList<>(12);
-    private int vidaCarta;
-
-    // Constructor
+    private int vidaEnemigo;
 
     // Getters y Setters
     public ArrayList<Carta> getCastillo() {
         return castillo;
     }
 
-    public void setCastillo(ArrayList<Carta> castillo) {
-        this.castillo = castillo;
+    public int getVidaEnemigo() {
+        return vidaEnemigo;
     }
 
-    // Método generar Castillo
-    public void generarCastillo(ArrayList<Carta> baraja) {
-        // Extraer las cartas con números 11, 12 y 13 de la baraja
-        Iterator<Carta> it = baraja.iterator();
-        while (it.hasNext()) {
-            Carta carta = it.next();
-
-            if (carta.getNumero() >= 11) {
-                castillo.add(carta);
-                it.remove();
-            }
+    // Generar castillo
+    public void generarCastillo(ArrayList<Carta> cartasCastillo) {
+        castillo.addAll(cartasCastillo);
+        if (!castillo.isEmpty()) {
+            vidaEnemigo = castillo.get(0).getVida();
         }
     }
 
-    // Método para mostrar el enemigo actual en el castillo
+    // Mostrar el enemigo sin eliminarlo
     public void mostrarEnemigo() {
         if (!castillo.isEmpty()) {
-            System.out.println("Enemigo actual en el castillo: \n" + castillo.get(0));
+            System.out.println("Enemigo actual en el castillo:");
+            System.out.println(castillo.get(0) + " (Vida: " + vidaEnemigo + ")");
         } else {
             System.out.println("El castillo está vacío.");
+        }
+    }
+
+    // Restar vida al enemigo
+    public void recibirAtaque(int dano) {
+        if (!castillo.isEmpty()) {
+            vidaEnemigo -= dano;
+            System.out.println("Daño causado al enemigo: " + dano);
+
+            if (vidaEnemigo <= 0) {
+                System.out.println("¡El enemigo ha sido derrotado!");
+                castillo.remove(0);
+
+                // Asignar vida al enemigo si hay más en el castillo
+                if (!castillo.isEmpty()) {
+                    vidaEnemigo = castillo.get(0).getVida();
+                    System.out.println("Nuevo enemigo en el castillo: " + castillo.get(0) + " (Vida: " + vidaEnemigo + ")");
+                } else {
+                    System.out.println("No quedan enemigos en el castillo.");
+                }
+            } else {
+                System.out.println("Vida restante del enemigo: " + vidaEnemigo);
+            }
         }
     }
 }

@@ -43,6 +43,17 @@ public class Jugador {
         }
     }
 
+    // Seleccionar una carta para jugar
+    public Carta jugarCarta(int indice) {
+        if (indice < 1 || indice > manoJugador.size()) {
+            System.out.println("Selección no válida. Intente de nuevo.");
+            return null;
+        }
+        // Jugar la carta (eliminarla de la mano)
+        Carta cartaJugada = manoJugador.remove(indice - 1);
+
+        return cartaJugada;
+    }
 
     // toString
     @Override
