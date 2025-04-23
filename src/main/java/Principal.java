@@ -63,27 +63,71 @@ public class Principal {
         System.out.println();
 
         // Seleccionar carta a jugar
-        System.out.println("Selecciona una carta para jugar (1-8):");
-        int cartaSeleccionada = sc.nextInt();
-        Carta cartaJugada = jugador1.jugarCarta(cartaSeleccionada);
+        System.out.println("Selecciona la/s carta/s que deseas jugar (separadas por espacio si es más de una):");
+        String[] entradas = sc.nextLine().trim().split("\\s+");
 
-        if (cartaJugada != null) {
-            System.out.println("Has jugado: " + cartaJugada);
-            // Mover la carta al mazo de cartas jugadas
-            mazoCartasJugadas.add(cartaJugada);
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (String entrada : entradas) {
+            try {
+                indices.add(Integer.parseInt(entrada));
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida: " + entrada);
+            }
+        }
 
-            // Daño al enemigo
-            enemigo.recibirAtaque(cartaJugada.getNumero());
+        // Ordenar los índices en orden descendente para evitar errores al eliminar
+        indices.sort(Collections.reverseOrder());
 
-            System.out.println();
+        ArrayList<Carta> cartasJugadasEsteTurno = new ArrayList<>();
+        int danoTotal = 0;
 
-            // Mostrar estado después del ataque
-            jugador1.mostrarMano();
+        for (int indice : indices) {
+            Carta carta = jugador1.jugarCarta(indice);
+            if (carta != null) {
+                cartasJugadasEsteTurno.add(carta);
+                mazoCartasJugadas.add(carta);
+                danoTotal += carta.getNumero();
+            }
+        }
 
-            System.out.println();
 
-            // Mostrar Mazos
-            mostrarCartasRestantes(enemigo, mazoPosada, mazoCartasJugadas, mazoCartasDescartadas);
+        System.out.println("\nCartas jugadas este turno:");
+        for (Carta c : cartasJugadasEsteTurno) {
+            System.out.println(" - " + c);
+        }
+
+        System.out.println("Daño total al enemigo: " + danoTotal);
+        enemigo.recibirAtaque(danoTotal);
+
+        int vidaEnemigoAntes = enemigo.getVidaEnemigo() + danoTotal;
+
+        if(danoTotal == vidaEnemigoAntes){
+            System.out.println("Daño exacto! Enemigo a mazoPosada");
+            mazoPosada.add(enemigo.getCastillo().remove(0));
+            mazoCartasDescartadas.addAll(cartasJugadasEsteTurno);
+            cartasJugadasEsteTurno.clear();
+
+            // Mostrar siguiente enemigo
+            enemigo.mostrarEnemigo();
+
+        }else if(danoTotal > vidaEnemigoAntes){
+            System.out.println("Enemigo derrotado!!");
+            mazoCartasDescartadas.addAll(cartasJugadasEsteTurno);
+            cartasJugadasEsteTurno.clear();
+
+            // Eliminar enemigo
+            enemigo.getCastillo().remove(0);
+
+            // Mostrar sig enemigo si queda alguno
+            if(!enemigo.getCastillo().isEmpty()){
+                enemigo.setVidaEnemigo(enemigo.getCastillo().get(0).getVida());
+                enemigo.mostrarEnemigo();
+            }else{
+                System.out.println("Has derrotado a todos los enemigos!");
+            }
+        }else{
+            System.out.println("El enemigo sobrevive y contraataca");
+
         }
     }
 

@@ -1,25 +1,29 @@
 import java.util.ArrayList;
 
-public class Enemigo {
-    private ArrayList<Carta> castillo = new ArrayList<>(12);
-    private int vidaEnemigo;
+    public class Enemigo {
+        private ArrayList<Carta> castillo = new ArrayList<>(12);
+        private int vidaEnemigo;
 
-    // Getters y Setters
-    public ArrayList<Carta> getCastillo() {
-        return castillo;
-    }
-
-    public int getVidaEnemigo() {
-        return vidaEnemigo;
-    }
-
-    // Generar castillo
-    public void generarCastillo(ArrayList<Carta> cartasCastillo) {
-        castillo.addAll(cartasCastillo);
-        if (!castillo.isEmpty()) {
-            vidaEnemigo = castillo.get(0).getVida();
+        // Getters y Setters
+        public ArrayList<Carta> getCastillo() {
+            return castillo;
         }
-    }
+
+        public int getVidaEnemigo() {
+            return vidaEnemigo;
+        }
+
+        public void setVidaEnemigo(int vida) {
+            this.vidaEnemigo = vida;
+        }
+
+        // Generar castillo
+        public void generarCastillo(ArrayList<Carta> cartasCastillo) {
+            castillo.addAll(cartasCastillo);
+            if (!castillo.isEmpty()) {
+                vidaEnemigo = castillo.get(0).getVida();
+            }
+        }
 
     // Mostrar el enemigo sin eliminarlo
     public void mostrarEnemigo() {
