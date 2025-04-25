@@ -95,8 +95,10 @@ public class Principal {
         for (Carta c : cartasJugadasEsteTurno) {
             System.out.println(" - " + c);
         }
+        
+        enemigo.mostrarEnemigo();
 
-        System.out.println("Daño total al enemigo: " + danoTotal);
+        //System.out.println("Daño total al enemigo: " + danoTotal);
         enemigo.recibirAtaque(danoTotal);
 
         int vidaEnemigoAntes = enemigo.getVidaEnemigo() + danoTotal;
@@ -127,6 +129,55 @@ public class Principal {
             }
         }else{
             System.out.println("El enemigo sobrevive y contraataca");
+            int ataque = enemigo.getVidaEnemigo();
+            System.out.println("Poder del ataque enemigo: " + ataque);
+
+            int defensaTotal = 0;
+            ArrayList<Carta> defensa = new ArrayList<>();
+
+            while (defensaTotal < ataque && !jugador1.getManoJugador().isEmpty()) {
+                System.out.println("\nTu mano actual:");
+                jugador1.mostrarMano();
+                System.out.println("Debes defenderte. Elige carta para descartar (valor acumulado: " + defensaTotal + "/" + ataque + "):");
+                String entrada = sc.nextLine();
+
+                try {
+                    int indice = Integer.parseInt(entrada);
+                    Carta cartaDescartada = jugador1.jugarCarta(indice);
+                    if (cartaDescartada != null) {
+                        defensa.add(cartaDescartada);
+                        defensaTotal += cartaDescartada.getNumero();
+                        System.out.println("Has descartado: " + cartaDescartada);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrada inválida.");
+                }
+            }
+
+            if (defensaTotal < ataque) {
+                System.out.println("¡No has podido defenderte! Has perdido la partida.");
+                // Aquí termina el juego
+                System.exit(0);
+            } else {
+                System.out.println("¡Has sobrevivido al ataque del enemigo!");
+                mazoCartasDescartadas.addAll(defensa);
+            }
+
+            System.out.println("\n======= RESUMEN DEL TURNO =======");
+            System.out.println("Mano actual:");
+            jugador1.mostrarMano();
+
+            System.out.println("\nCartas jugadas:");
+            for (Carta c : mazoCartasJugadas) {
+                System.out.println(" - " + c);
+            }
+
+            System.out.println("\nVida restante del enemigo:");
+            enemigo.mostrarEnemigo();
+
+            System.out.println("\nEstado de los mazos:");
+            mostrarCartasRestantes(enemigo, mazoPosada, mazoCartasJugadas, mazoCartasDescartadas);
+            System.out.println("==================================");
 
         }
     }
