@@ -14,6 +14,9 @@ public class Principal {
         ArrayList<Carta> mazoCartasJugadas = new ArrayList<>();
         ArrayList<Carta> mazoCartasDescartadas = new ArrayList<>();
 
+        // Gestor guardar partida
+        Partida partida = new Partida(jugador1, enemigo, mazoPosada, mazoCartasJugadas, mazoCartasDescartadas);
+
         // Extraer cartas del castillo (11, 12 y 13)
         ArrayList<Carta> cartasCastillo = new ArrayList<>();
         Iterator<Carta> it = baraja.iterator();
@@ -161,6 +164,17 @@ public class Principal {
             } else {
                 System.out.println("¡Has sobrevivido al ataque del enemigo!");
                 mazoCartasDescartadas.addAll(defensa);
+
+                // Opción guardar la partida
+                System.out.print("\n¿Deseas guardar y terminar la partida? (S/N): ");
+                String opcion = sc.nextLine().trim().toUpperCase();
+
+                if (opcion.equals("S")) {
+                    partida.guardarPartidaJSON();
+                    partida.guardarEstadisticasCSV();
+                    System.out.println("Partida guardada correctamente. ¡Hasta la próxima!");
+                    System.exit(0);
+                }
             }
 
             System.out.println("\n======= RESUMEN DEL TURNO =======");
@@ -178,6 +192,17 @@ public class Principal {
             System.out.println("\nEstado de los mazos:");
             mostrarCartasRestantes(enemigo, mazoPosada, mazoCartasJugadas, mazoCartasDescartadas);
             System.out.println("==================================");
+
+            // Opción guardar la partida
+            System.out.print("\n¿Deseas guardar y terminar la partida? (S/N): ");
+            String opcion = sc.nextLine().trim().toUpperCase();
+
+            if (opcion.equals("S")) {
+                partida.guardarPartidaJSON();
+                partida.guardarEstadisticasCSV();
+                System.out.println("Partida guardada correctamente. ¡Hasta la próxima!");
+                System.exit(0);
+            }
 
         }
     }
